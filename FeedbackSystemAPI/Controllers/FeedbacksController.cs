@@ -82,6 +82,8 @@ namespace FeedbackSystemAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Feedback>> PostFeedback(Feedback feedback)
         {
+            feedback.DateTime = DateTime.Now.ToString();
+            feedback.Status = "Pending";
             _context.Feedbacks.Add(feedback);
             try
             {
