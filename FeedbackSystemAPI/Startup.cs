@@ -105,16 +105,20 @@ namespace FeedbackSystemAPI
         {
             JwtConfigService(services);
 
+            services.AddCors(options => options.AddPolicy("CorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:3000")
+                       .AllowAnyMethod()
+                       .AllowAnyHeader()
+                       .AllowCredentials();
+            }));
+
             services.AddControllers();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddDbContext<FeedbacSystemkDBContext>();
 
             var jwtSection = Configuration.GetSection("JWTSettings");
-            services.Configure<JWTSettings>(jwtSection);
-
-            //to validate the token which has been sent by clients
-
-           
+            services.Configure<JWTSettings>(jwtSection);            
 
             services.AddSwaggerGen(c =>
             {
@@ -131,20 +135,14 @@ namespace FeedbackSystemAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "FeedbackSystemAPI v1"));
             }
-
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
-
+            app.UseRouting();
             app.UseCors(option => option.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()
             );
-
-            app.UseRouting();
-
             app.UseCors("CorsPolicy");
-
-            app.UseAuthentication();
-          
+            app.UseAuthentication();          
             app.UseAuthorization();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers().RequireCors("CorsPolicy");
