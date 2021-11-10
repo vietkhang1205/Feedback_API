@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FeedbackSystemAPI.Models;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FeedbackSystemAPI.Controllers
 {
@@ -13,11 +15,20 @@ namespace FeedbackSystemAPI.Controllers
     [ApiController]
     public class FeedbacksController : ControllerBase
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly FeedbacSystemkDBContext _context;
 
-        public FeedbacksController(FeedbacSystemkDBContext context)
+        public FeedbacksController(FeedbacSystemkDBContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        protected String GetCurrentUserId()
+        {
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return userId;
         }
 
         // GET: api/Feedbacks
@@ -82,6 +93,7 @@ namespace FeedbackSystemAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Feedback>> PostFeedback(Feedback feedback)
         {
+            feedback.UserId = GetCurrentUserId().ToString();
             feedback.DateTime = DateTime.Now.ToString();
             feedback.Status = "Pending";
             _context.Feedbacks.Add(feedback);

@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace FeedbackSystemAPI.Controllers
 {
-    
-    //[Authorize]
+
     [Route("api/[controller]")]
     [ApiController]
     public class DevicesController : ControllerBase

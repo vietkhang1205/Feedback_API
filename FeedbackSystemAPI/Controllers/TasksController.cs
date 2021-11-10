@@ -23,14 +23,14 @@ namespace FeedbackSystemAPI.Controllers
 
         // GET: api/Tasks
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Task>>> GetTasks()
+        public async Task<ActionResult<IEnumerable<Models.Task>>> GetTasks()
         {
             return await _context.Tasks.ToListAsync();
         }
 
         // GET: api/Tasks/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Task>> GetTask(string id)
+        public async Task<ActionResult<Models.Task>> GetTask(string id)
         {
             var task = await _context.Tasks.FindAsync(id);
 
@@ -76,7 +76,7 @@ namespace FeedbackSystemAPI.Controllers
         // POST: api/Tasks
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Task>> PostTask(Task task)
+        public async Task<ActionResult<Models.Task>> PostTask(Task task)
         {
             _context.Tasks.Add(task);
             try
