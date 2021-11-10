@@ -82,9 +82,14 @@ namespace FeedbackSystemAPI.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserWithToken>> PostUser([FromBody] User user)
+        public async Task<ActionResult<UserWithToken>> Login([FromBody] User user)
         {
             user = await _context.Users.Where(u => u.Email == user.Email && u.Password == user.Password).FirstOrDefaultAsync();
+
+            if(user == null)
+            {
+                return null;
+            }
 
             UserWithToken userWithToken = new UserWithToken(user);
 
